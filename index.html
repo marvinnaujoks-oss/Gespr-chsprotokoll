@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gesprächsprotokoll – TOTAL Feuerschutz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --primary: #1e4f9a;
+      --primary-soft: #e0ecff;
+      --border: #d0d7e2;
+      --text: #1b2533;
+      --muted: #6c7a96;
+      --danger: #b00020;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: 1.6rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .toolbar button {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .toolbar button.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .toolbar button.danger {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: #fff5f7;
+    }
+
+    .toolbar button:hover {
+      filter: brightness(0.97);
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1rem 1.25rem 1.25rem;
+      box-shadow: 0 6px 16px rgba(15, 35, 52, 0.06);
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      font-size: 0.98rem;
+    }
+
+    .header-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: 0.85rem;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.5rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    .field textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    .field textarea.large {
+      min-height: 160px;
+    }
+
+    .todo-card-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      gap: 0.5rem;
+    }
+
+    .todo-card-title span {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .todo-actions button {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f7f8fc;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .todo-actions button:hover {
+      filter: brightness(0.97);
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 500px;
+      font-size: 0.8rem;
+    }
+
+    th, td {
+      border-bottom: 1px solid #e2e6f0;
+      padding: 0.25rem 0.4rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3f5fc;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    td input,
+    td textarea {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.3rem;
+      font-size: 0.78rem;
+      font-family: inherit;
+    }
+
+    td textarea {
+      min-height: 34px;
+      resize: vertical;
+    }
+
+    td .checkbox-cell {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    td input[type="checkbox"] {
+      width: auto;
+    }
+
+    .remove-row-btn {
+      border-radius: 999px;
+      border: 1px solid #e1a2aa;
+      background: #fff5f6;
+      color: #b3261e;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    tr[data-template] {
+      display: none;
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    @media print {
+      .toolbar { display: none; }
+      body { background: #fff; }
+      .card { box-shadow: none; border-color: #ccc; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <h1>Gesprächsprotokoll</h1>
+    <div class="subtitle">
+      Dokumentation von Kundengesprächen inkl. Aufgaben für TOTAL und den Kunden.
+    </div>
+
+    <div class="toolbar">
+      <button type="button" class="primary" id="saveBtn">💾 Speichern</button>
+      <button type="button" id="loadBtn">📂 Laden</button>
+      <button type="button" id="printBtn">🖨️ Drucken / PDF</button>
+      <button type="button" class="danger" id="clearBtn">🧹 Alles löschen</button>
+    </div>
+
+    <!-- Kopf -->
+    <div class="card">
+      <div class="section-title">Allgemeine Angaben</div>
+      <div class="header-grid">
+        <div class="field">
+          <label for="datum">Datum</label>
+          <input id="datum" type="date" data-header="datum" />
+        </div>
+        <div class="field">
+          <label for="ort">Ort / Objekt</label>
+          <input id="ort" type="text" data-header="ort" placeholder="z.B. Objekt, Niederlassung, Stadt" />
+        </div>
+        <div class="field">
+          <label for="kunde">Kunde</label>
+          <input id="kunde" type="text" data-header="kunde" placeholder="Firmenname" />
+        </div>
+        <div class="field">
+          <label for="sitzungsgrund">Gesprächstyp / Sitzungsgrund</label>
+          <select id="sitzungsgrund" data-header="sitzungsgrund">
+            <option value="">– bitte auswählen –</option>
+            <option>Bestandskundenberatung</option>
+            <option>Neukundenberatung</option>
+            <option>Projektbesprechung</option>
+            <option>Störung / Reklamation</option>
+            <option>Angebotsbesprechung</option>
+            <option>Abschluss- / Nachbesprechung</option>
+            <option>Sonstiges</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fachbereich">Fachbereich(e)</label>
+          <input id="fachbereich" data-header="fachbereich" type="text"
+                 placeholder="z.B. tragbare/fahrbare Feuerlöscher, Löschwassertechnik, RWA…" />
+        </div>
+        <div class="field">
+          <label for="teilnehmer">Teilnehmer (TOTAL & Kunde)</label>
+          <textarea id="teilnehmer" data-header="teilnehmer"
+            placeholder="z.B. Marvin Naujoks (TOTAL), Herr Müller (Haustechnik), Frau Schmidt (Einkauf)"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gesprächsverlauf -->
+    <div class="card">
+      <div class="section-title">Gesprächsverlauf</div>
+      <div class="field">
+        <label for="verlauf">Protokoll / Gesprächsverlauf</label>
+        <textarea id="verlauf" class="large" data-header="verlauf"
+          placeholder="Ablauf des Gesprächs, zentrale Punkte, getroffene Entscheidungen, Angebote, offene Fragen etc."></textarea>
+      </div>
+    </div>
+
+    <!-- To-Do TOTAL -->
+    <div class="card">
+      <div class="todo-card-title">
+        <span>To-Do-Liste – Aufgaben TOTAL</span>
+        <div class="todo-actions">
+          <button type="button" data-add-row="todo_total">+ Aufgabe hinzufügen</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Erledigt</th>
+              <th>Aufgabe</th>
+              <th>Verantwortlich</th>
+              <th>Fällig am</th>
+              <th>Notizen</th>
+              <th>Aktion</th>
+            </tr>
+          </thead>
+          <tbody data-section="todo_total">
+            <tr data-template="true">
+              <td class="checkbox-cell">
+                <input type="checkbox" name="done" />
+              </td>
+              <td><textarea name="task" placeholder="z.B. Angebot für RWA-Sanierung erstellen"></textarea></td>
+              <td><input name="owner" type="text" placeholder="z.B. Marvin Naujoks" /></td>
+              <td><input name="due" type="date" /></td>
+              <td><textarea name="note"></textarea></td>
+              <td><button type="button" class="remove-row-btn">Entfernen</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="hint">Diese Liste bleibt intern bei TOTAL, kann aber bei Bedarf mit versendet werden.</div>
+    </div>
+
+    <!-- To-Do Kunde -->
+    <div class="card">
+      <div class="todo-card-title">
+        <span>To-Do-Liste – Aufgaben Kunde</span>
+        <div class="todo-actions">
+          <button type="button" data-add-row="todo_kunde">+ Aufgabe hinzufügen</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Erledigt</th>
+              <th>Aufgabe</th>
+              <th>Ansprechpartner Kunde</th>
+              <th>Fällig am</th>
+              <th>Notizen</th>
+              <th>Aktion</th>
+            </tr>
+          </thead>
+          <tbody data-section="todo_kunde">
+            <tr data-template="true">
+              <td class="checkbox-cell">
+                <input type="checkbox" name="done" />
+              </td>
+              <td><textarea name="task" placeholder="z.B. Pläne für Löschwasseranlage zusenden"></textarea></td>
+              <td><input name="owner" type="text" placeholder="z.B. Herr Müller" /></td>
+              <td><input name="due" type="date" /></td>
+              <td><textarea name="note"></textarea></td>
+              <td><button type="button" class="remove-row-btn">Entfernen</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="hint">Diese Liste eignet sich gut zur Weiterleitung an den Kunden nach dem Gespräch.</div>
+    </div>
+
+    <!-- Zusammenfassung -->
+    <div class="card">
+      <div class="section-title">Kurz-Zusammenfassung fürs Protokoll</div>
+      <div class="field">
+        <label for="summary">Zusammenfassung (1–5 Sätze)</label>
+        <textarea id="summary" class="large" data-header="summary"
+          placeholder="Kurze Zusammenfassung der wichtigsten Punkte, Entscheidungen und nächsten Schritte."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = "gespraechsprotokoll_total_v1";
+
+      function createRow(tbody, rowData = null) {
+        const template = tbody.querySelector("tr[data-template]");
+        if (!template) return;
+        const clone = template.cloneNode(true);
+        clone.removeAttribute("data-template");
+
+        clone.querySelectorAll("input, textarea").forEach(el => {
+          const name = el.name;
+          const value = rowData ? rowData[name] : "";
+          if (el.type === "checkbox") {
+            el.checked = !!value;
+          } else {
+            el.value = value || "";
+          }
+        });
+
+        tbody.appendChild(clone);
+      }
+
+      function saveAll() {
+        const data = { header: {}, todos: {} };
+
+        document.querySelectorAll("[data-header]").forEach(el => {
+          data.header[el.dataset.header] = el.value || "";
+        });
+
+        document.querySelectorAll("tbody[data-section]").forEach(tbody => {
+          const section = tbody.dataset.section;
+          data.todos[section] = [];
+          tbody.querySelectorAll("tr:not([data-template])").forEach(row => {
+            const rowData = {};
+            row.querySelectorAll("input, textarea").forEach(el => {
+              if (!el.name) return;
+              let value;
+              if (el.type === "checkbox") {
+                value = el.checked;
+              } else {
+                value = el.value || "";
+              }
+              rowData[el.name] = value;
+            });
+            const allEmpty = Object.values(rowData).every(v => v === "" || v === false);
+            if (!allEmpty) data.todos[section].push(rowData);
+          });
+        });
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
+
+      function loadAll() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        let data;
+        try { data = JSON.parse(raw); } catch { return; }
+        if (!data) return;
+
+        if (data.header) {
+          document.querySelectorAll("[data-header]").forEach(el => {
+            const key = el.dataset.header;
+            if (data.header.hasOwnProperty(key)) {
+              el.value = data.header[key];
+            }
+          });
+        }
+
+        document.querySelectorAll("tbody[data-section]").forEach(tbody => {
+          tbody.querySelectorAll("tr:not([data-template])").forEach(tr => tr.remove());
+          const section = tbody.dataset.section;
+          const rows = (data.todos && data.todos[section]) || [];
+          if (rows.length === 0) {
+            createRow(tbody);
+          } else {
+            rows.forEach(rowData => createRow(tbody, rowData));
+          }
+        });
+      }
+
+      function clearAll() {
+        if (!confirm("Alle Eingaben wirklich löschen? Gespeicherte Daten gehen verloren.")) return;
+
+        localStorage.removeItem(STORAGE_KEY);
+
+        document.querySelectorAll("[data-header]").forEach(el => {
+          el.value = "";
+        });
+
+        document.querySelectorAll("tbody[data-section]").forEach(tbody => {
+          tbody.querySelectorAll("tr:not([data-template])").forEach(tr => tr.remove());
+          createRow(tbody);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Initial eine Zeile in beiden To-Do-Listen
+        document.querySelectorAll("tbody[data-section]").forEach(tbody => {
+          createRow(tbody);
+        });
+
+        // Vorhandene Daten laden
+        loadAll();
+
+        const saveBtn = document.getElementById("saveBtn");
+        const loadBtn = document.getElementById("loadBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const printBtn = document.getElementById("printBtn");
+
+        if (saveBtn) saveBtn.addEventListener("click", saveAll);
+        if (loadBtn) loadBtn.addEventListener("click", loadAll);
+        if (clearBtn) clearBtn.addEventListener("click", clearAll);
+        if (printBtn) printBtn.addEventListener("click", () => {
+          saveAll();
+          window.print();
+        });
+
+        // Aufgabe hinzufügen
+        document.querySelectorAll("[data-add-row]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const section = btn.dataset.addRow;
+            const tbody = document.querySelector(`tbody[data-section="${section}"]`);
+            if (tbody) {
+              createRow(tbody);
+              saveAll();
+            }
+          });
+        });
+
+        // Zeile entfernen
+        document.addEventListener("click", e => {
+          const btn = e.target.closest(".remove-row-btn");
+          if (!btn) return;
+          const row = btn.closest("tr");
+          const tbody = row && row.closest("tbody[data-section]");
+          if (!row || !tbody) return;
+
+          const visibleRows = tbody.querySelectorAll("tr:not([data-template])");
+          if (visibleRows.length <= 1) {
+            row.querySelectorAll("input, textarea").forEach(el => {
+              if (el.type === "checkbox") el.checked = false;
+              else el.value = "";
+            });
+          } else {
+            row.remove();
+          }
+          saveAll();
+        });
+
+        // Autospeichern
+        document.addEventListener("input", e => {
+          if (e.target.matches("input, textarea") && e.isTrusted) {
+            saveAll();
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
